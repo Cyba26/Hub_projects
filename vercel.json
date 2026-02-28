@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/pico8/:path*",
+      "destination": "https://pico8-online.vercel.app/:path*"
+    }
+  ]
+}
