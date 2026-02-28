@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Projects Hub — AI-Powered Design & Dev</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg-deep: #0d0d0f;
+      --bg-dark: #141418;
+      --border: #2a2a32;
+      --border-light: #3a3a44;
+      --text-primary: #e8e8ec;
+      --text-secondary: #8a8a96;
+      --text-dim: #5a5a66;
+      --orange-primary: #e8712a;
+      --orange-light: #f0923e;
+      --orange-subtle: rgba(232, 113, 42, 0.06);
+    }
+
+    body {
+      font-family: 'Rajdhani', sans-serif;
+      background: var(--bg-deep);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── Global dot pattern ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: radial-gradient(circle, rgba(255,255,255,0.045) 1px, transparent 1px);
+      background-size: 24px 24px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── Global grid accent right side ── */
+    body::after {
+      content: '';
+      position: fixed;
+      top: 0; right: 0;
+      width: 45%;
+      height: 100%;
+      background-image:
+        linear-gradient(rgba(232,113,42,0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(232,113,42,0.035) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+      z-index: 0;
+      mask-image: linear-gradient(to left, rgba(0,0,0,0.6), transparent);
+      -webkit-mask-image: linear-gradient(to left, rgba(0,0,0,0.6), transparent);
+    }
+
+    .page-wrapper { position: relative; z-index: 1; }
+
+    /* ══════════════════════════════════════════
+       HEADER — Full bleed + parallax bg
+    ══════════════════════════════════════════ */
+    .header {
+      position: relative;
+      width: 100%;
+      min-height: 440px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 80px 32px 64px;
+      overflow: hidden;
+      --parallax-circles: 0px;
+      --parallax-squares: 0px;
+    }
+
+    /* Bottom fade line */
+    .header::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(
+        to right,
+        transparent 5%,
+        var(--border) 30%,
+        var(--orange-primary) 50%,
+        var(--border) 70%,
+        transparent 95%
+      );
+      opacity: 0.5;
+      z-index: 3;
+    }
+
+    /* Decorative floating grid squares */
+    .header-deco-grid {
+      position: absolute;
+      width: 200px; height: 200px;
+      border: 1px solid rgba(232,113,42,0.14);
+      border-radius: 4px;
+      pointer-events: none;
+      z-index: 1;
+    }
+    .header-deco-grid--1 { top: calc(30px + var(--parallax-squares)); left: 8%; transform: rotate(15deg); }
+    .header-deco-grid--2 { bottom: calc(40px - var(--parallax-squares)); right: 10%; width: 140px; height: 140px; transform: rotate(-8deg); border-color: rgba(255,255,255,0.07); }
+    .header-deco-grid--3 { top: calc(60px + var(--parallax-squares)); right: 25%; width: 80px; height: 80px; transform: rotate(30deg); border-color: rgba(232,113,42,0.1); }
+
+    .header-orbit {
+      position: absolute;
+      width: 500px; height: 500px;
+      border: 1px solid rgba(232,113,42,0.1);
+      border-radius: 50%;
+      top: calc(50% + var(--parallax-circles));
+      left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      animation: rotate-slow 40s linear infinite;
+      z-index: 1;
+    }
+    .header-orbit::after {
+      content: '';
+      position: absolute;
+      top: -3px; left: 50%;
+      width: 6px; height: 6px;
+      background: var(--orange-primary);
+      border-radius: 50%;
+      box-shadow: 0 0 12px var(--orange-primary);
+      opacity: 0.8;
+    }
+    .header-orbit-2 {
+      width: 340px; height: 340px;
+      border-color: rgba(255,255,255,0.06);
+      animation-duration: 28s;
+      animation-direction: reverse;
+    }
+    .header-orbit-2::after {
+      background: rgba(255,255,255,0.5);
+      box-shadow: 0 0 10px rgba(255,255,255,0.3);
+      width: 4px; height: 4px;
+    }
+
+    @keyframes rotate-slow {
+      from { transform: translate(-50%, -50%) rotate(0deg); }
+      to { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+
+    /* Parallax background layer (static, no parallax) */
+    .header-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 50% 45%, rgba(232,113,42,0.07) 0%, transparent 70%),
+        linear-gradient(180deg, #111114 0%, var(--bg-deep) 100%);
+      z-index: 0;
+    }
+
+    .header-bg::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(45deg, rgba(255,255,255,0.025) 1px, transparent 1px),
+        linear-gradient(-45deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+      background-size: 32px 32px;
+      pointer-events: none;
+    }
+
+    .header-content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      max-width: 680px;
+    }
+
+    .header-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--orange-primary);
+      background: rgba(232,113,42,0.06);
+      border: 1px solid rgba(232,113,42,0.12);
+      border-radius: 6px;
+      padding: 7px 16px;
+      margin-bottom: 28px;
+    }
+    .header-badge::before {
+      content: '';
+      width: 6px; height: 6px;
+      background: var(--orange-primary);
+      border-radius: 50%;
+      box-shadow: 0 0 8px var(--orange-primary);
+      animation: pulse-dot 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.35; }
+    }
+
+    .header h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 800;
+      font-size: clamp(32px, 5vw, 52px);
+      letter-spacing: -0.5px;
+      line-height: 1.15;
+      background: linear-gradient(135deg, #ffffff 0%, #d0d0d6 40%, var(--orange-light) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 20px;
+    }
+
+    .header p {
+      font-size: 17.5px;
+      font-weight: 400;
+      line-height: 1.7;
+      color: var(--text-secondary);
+      max-width: 540px;
+      margin: 0 auto;
+    }
+    .header p strong { color: var(--text-primary); font-weight: 600; }
+
+    /* ══════════════════════════════════════════
+       MAIN CONTENT
+    ══════════════════════════════════════════ */
+    .main-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 48px 24px 80px;
+    }
+
+    /* ══════════════════════════════════════════
+       PROJECTS GRID
+    ══════════════════════════════════════════ */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 24px;
+    }
+
+    /* ══════════════════════════════════════════
+       PROJECT CARD — SF clip-path + SVG border
+    ══════════════════════════════════════════ */
+    .project-card {
+      --cut: 32px;
+      position: relative;
+      overflow: visible;
+      transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      cursor: pointer;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+
+    .project-card:hover {
+      filter: drop-shadow(0 12px 24px rgba(0,0,0,0.4)) drop-shadow(0 0 16px rgba(232,113,42,0.06));
+    }
+    .project-card:hover .card-inner {
+      transform: translateY(-6px);
+    }
+    .project-card:hover .card-border-svg {
+      transform: translateY(-6px);
+    }
+    .project-card:hover .card-thumbnail-overlay { opacity: 0.1; }
+    .project-card:hover .card-arrow { transform: translate(2px, -2px); opacity: 1; }
+    .project-card:hover .card-border-svg polyline {
+      stroke: rgba(232,113,42,0.4);
+    }
+
+    /* Card inner content wrapper — clipped */
+    .card-inner {
+      position: relative;
+      background: linear-gradient(170deg, #1d1d26 0%, #161620 60%, #131318 100%);
+      clip-path: polygon(
+        0 0,
+        calc(100% - var(--cut)) 0,
+        100% var(--cut),
+        100% 100%,
+        var(--cut) 100%,
+        0 calc(100% - var(--cut))
+      );
+      transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                  filter 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* SVG border overlay — positioned on top, matches shape exactly */
+    .card-border-svg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      z-index: 10;
+      overflow: visible;
+      transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                  filter 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .card-border-svg polyline {
+      stroke: var(--border);
+      stroke-width: 1;
+      fill: none;
+      vector-effect: non-scaling-stroke;
+      transition: stroke 0.35s ease;
+    }
+
+    /* Card inner dot pattern */
+    .card-pattern {
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(circle, rgba(255,255,255,0.02) 1px, transparent 1px);
+      background-size: 14px 14px;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* Thumbnail */
+    .card-thumbnail {
+      position: relative;
+      width: 100%;
+      height: 190px;
+      background: linear-gradient(180deg, #1a1a22 0%, #12121a 100%);
+      overflow: hidden;
+      z-index: 2;
+    }
+
+    .card-thumbnail-placeholder {
+      width: 100%; height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .pico8-logo { width: 80px; height: 80px; opacity: 0.85; }
+
+    .card-thumbnail-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, var(--orange-primary), transparent 70%);
+      opacity: 0;
+      transition: opacity 0.35s ease;
+      z-index: 3;
+    }
+
+    .card-thumbnail::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 50px;
+      background: linear-gradient(to top, #161620, transparent);
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .card-grid-pattern {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(232,113,42,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(232,113,42,0.025) 1px, transparent 1px);
+      background-size: 20px 20px;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* Card body */
+    .card-body {
+      padding: 22px 24px 26px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .card-title-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .card-title {
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 700;
+      font-size: 16px;
+      letter-spacing: 0.5px;
+      line-height: 1.3;
+      transition: color 0.35s ease;
+    }
+
+    .project-card:hover .card-title {
+      color: var(--orange-light);
+    }
+
+    .card-arrow {
+      color: var(--orange-primary);
+      font-size: 18px;
+      opacity: 0.4;
+      transition: all 0.3s ease;
+      flex-shrink: 0;
+      margin-left: 12px;
+      margin-top: 2px;
+    }
+
+    .card-description {
+      font-size: 14.5px;
+      font-weight: 400;
+      line-height: 1.55;
+      color: var(--text-secondary);
+      margin-bottom: 18px;
+    }
+
+    .card-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+
+    .tag {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 10.5px;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      padding: 5px 12px;
+      border-radius: 4px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+      border: 1px solid rgba(255,255,255,0.06);
+      color: var(--text-dim);
+    }
+
+    .tag--orange {
+      background: linear-gradient(135deg, rgba(232,113,42,0.12), rgba(232,113,42,0.04));
+      border-color: rgba(232,113,42,0.18);
+      color: var(--orange-light);
+    }
+
+    /* Status badge */
+    .card-status {
+      position: absolute;
+      top: 16px; left: 16px;
+      z-index: 4;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 4px;
+      background: rgba(12,12,16,0.85);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--border);
+    }
+    .card-status--wip { color: var(--orange-light); }
+    .card-status--wip .status-dot { background: var(--orange-primary); box-shadow: 0 0 6px var(--orange-primary); }
+    .status-dot { width: 5px; height: 5px; border-radius: 50%; }
+
+    /* ══════════════════════════════════════════
+       EMPTY SLOT CARD
+    ══════════════════════════════════════════ */
+    .project-card--empty { cursor: default; }
+    .project-card--empty:hover {
+      filter: none;
+    }
+    .project-card--empty:hover .card-inner,
+    .project-card--empty:hover .card-border-svg {
+      transform: none;
+    }
+    .project-card--empty:hover .card-border-svg polyline {
+      stroke: var(--border-light);
+    }
+
+    .project-card--empty .card-inner {
+      background: linear-gradient(170deg, rgba(22,22,30,0.6) 0%, rgba(16,16,22,0.6) 100%);
+    }
+
+    .project-card--empty .card-border-svg polyline {
+      stroke-dasharray: 8 6;
+      stroke: rgba(42,42,50,0.9);
+    }
+
+    .empty-slot {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 320px;
+      gap: 16px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .empty-slot-icon {
+      width: 52px; height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      color: var(--text-dim);
+      border: 1px dashed var(--border);
+      clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+      background: rgba(255,255,255,0.012);
+    }
+
+    .empty-slot-text {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 12px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text-dim);
+    }
+
+    /* ══════════════════════════════════════════
+       FOOTER
+    ══════════════════════════════════════════ */
+    .footer {
+      margin-top: 64px;
+      padding-top: 32px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 1px;
+      color: var(--text-dim);
+    }
+    .footer a {
+      color: var(--orange-primary);
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+    .footer a:hover { color: var(--orange-light); }
+
+    /* ══════════════════════════════════════════
+       ANIMATIONS
+    ══════════════════════════════════════════ */
+    @keyframes fade-up {
+      from { opacity: 0; transform: translateY(32px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .header-content { animation: fade-up 0.7s ease-out 0.1s both; }
+
+    /* Scroll reveal — elements start hidden */
+    .reveal {
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+                  transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .reveal.revealed {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Stagger delays for grid children */
+    .reveal-delay-1 { transition-delay: 0.08s; }
+    .reveal-delay-2 { transition-delay: 0.16s; }
+    .reveal-delay-3 { transition-delay: 0.24s; }
+    .reveal-delay-4 { transition-delay: 0.32s; }
+    .reveal-delay-5 { transition-delay: 0.40s; }
+
+    .footer {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+    }
+    .footer.revealed {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ══════════════════════════════════════════
+       RESPONSIVE
+    ══════════════════════════════════════════ */
+    @media (max-width: 768px) {
+      .header { min-height: 340px; padding: 60px 20px 48px; }
+      .main-content { padding: 32px 16px 60px; }
+      .projects-grid { grid-template-columns: 1fr; }
+      .header-orbit, .header-orbit-2 { display: none; }
+      .header-deco-grid { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="page-wrapper">
+
+    <!-- ═══ HEADER ═══ -->
+    <header class="header">
+      <div class="header-bg"></div>
+      <div class="header-deco-grid header-deco-grid--1"></div>
+      <div class="header-deco-grid header-deco-grid--2"></div>
+      <div class="header-deco-grid header-deco-grid--3"></div>
+      <div class="header-orbit"></div>
+      <div class="header-orbit header-orbit-2"></div>
+
+      <div class="header-content">
+        <div class="header-badge"><span>Projects Hub</span></div>
+        <h1>The Workshop</h1>
+        <p><strong>Designé à la main, codé par l'IA.</strong> Des projets clé en main, pensés de A à Z — du design au développement. Chaque carte ouvre la porte à une expérience complète, construite et itérée en tandem avec l'intelligence artificielle.</p>
+      </div>
+    </header>
+
+    <!-- ═══ MAIN CONTENT ═══ -->
+    <div class="main-content">
+
+      <div class="projects-grid">
+
+        <!-- ── PICO-8 PROJECT ── -->
+        <a href="/pico8/" class="project-card reveal reveal-delay-0" data-project>
+          <div class="card-inner">
+            <div class="card-pattern"></div>
+            <div class="card-grid-pattern"></div>
+            <div class="card-thumbnail">
+              <div class="card-status card-status--wip">
+                <span class="status-dot"></span>
+                En cours
+              </div>
+              <div class="card-thumbnail-placeholder">
+                <svg class="pico8-logo" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="10" y="10" width="100" height="100" rx="8" fill="#1a1a2e" stroke="#e8712a" stroke-width="2.5"/>
+                  <rect x="22" y="22" width="76" height="56" rx="4" fill="#0d0d14" stroke="#3a3a44" stroke-width="1.5"/>
+                  <circle cx="38" cy="92" r="7" fill="none" stroke="#e8712a" stroke-width="2"/>
+                  <circle cx="38" cy="92" r="2.5" fill="#e8712a"/>
+                  <rect x="58" y="85" width="14" height="5" rx="2" fill="#3a3a44"/>
+                  <rect x="58" y="93" width="14" height="5" rx="2" fill="#3a3a44"/>
+                  <rect x="82" y="86" width="8" height="8" rx="2" fill="none" stroke="#e8712a" stroke-width="1.5"/>
+                  <rect x="32" y="32" width="6" height="6" fill="#e8712a" opacity="0.8"/>
+                  <rect x="40" y="32" width="6" height="6" fill="#f0923e" opacity="0.6"/>
+                  <rect x="48" y="32" width="6" height="6" fill="#e8712a" opacity="0.5"/>
+                  <rect x="56" y="38" width="6" height="6" fill="#e8712a" opacity="0.7"/>
+                  <rect x="64" y="38" width="6" height="6" fill="#f0923e" opacity="0.4"/>
+                  <rect x="36" y="44" width="6" height="6" fill="#f0923e" opacity="0.5"/>
+                  <rect x="44" y="44" width="6" height="6" fill="#e8712a" opacity="0.6"/>
+                  <rect x="52" y="50" width="6" height="6" fill="#e8712a" opacity="0.4"/>
+                  <rect x="72" y="32" width="6" height="6" fill="#e8712a" opacity="0.3"/>
+                  <rect x="64" y="50" width="6" height="6" fill="#f0923e" opacity="0.5"/>
+                  <rect x="76" y="44" width="6" height="6" fill="#e8712a" opacity="0.4"/>
+                  <text x="60" y="68" text-anchor="middle" font-family="monospace" font-size="9" font-weight="bold" fill="#e8712a" opacity="0.7">PICO-8</text>
+                </svg>
+              </div>
+              <div class="card-thumbnail-overlay"></div>
+            </div>
+            <div class="card-body">
+              <div class="card-title-row">
+                <span class="card-title">Pico-8 Game</span>
+                <span class="card-arrow">↗</span>
+              </div>
+              <p class="card-description">Développement d'un jeu rétro sur la fantasy console Pico-8. Pixel art, contraintes créatives et gameplay old-school.</p>
+              <div class="card-tags">
+                <span class="tag tag--orange">Pico-8</span>
+                <span class="tag">Game Dev</span>
+                <span class="tag">Pixel Art</span>
+                <span class="tag">Lua</span>
+              </div>
+            </div>
+          </div>
+          <svg class="card-border-svg" preserveAspectRatio="none"></svg>
+        </a>
+
+        <!-- ── EMPTY SLOTS ── -->
+        <div class="project-card project-card--empty reveal reveal-delay-1">
+          <div class="card-inner">
+            <div class="card-pattern"></div>
+            <div class="empty-slot">
+              <div class="empty-slot-icon">+</div>
+              <span class="empty-slot-text">Prochain projet</span>
+            </div>
+          </div>
+          <svg class="card-border-svg" preserveAspectRatio="none"></svg>
+        </div>
+
+        <div class="project-card project-card--empty reveal reveal-delay-2">
+          <div class="card-inner">
+            <div class="card-pattern"></div>
+            <div class="empty-slot">
+              <div class="empty-slot-icon">+</div>
+              <span class="empty-slot-text">Prochain projet</span>
+            </div>
+          </div>
+          <svg class="card-border-svg" preserveAspectRatio="none"></svg>
+        </div>
+
+        <div class="project-card project-card--empty reveal reveal-delay-3">
+          <div class="card-inner">
+            <div class="card-pattern"></div>
+            <div class="empty-slot">
+              <div class="empty-slot-icon">+</div>
+              <span class="empty-slot-text">Prochain projet</span>
+            </div>
+          </div>
+          <svg class="card-border-svg" preserveAspectRatio="none"></svg>
+        </div>
+
+        <div class="project-card project-card--empty reveal reveal-delay-4">
+          <div class="card-inner">
+            <div class="card-pattern"></div>
+            <div class="empty-slot">
+              <div class="empty-slot-icon">+</div>
+              <span class="empty-slot-text">Prochain projet</span>
+            </div>
+          </div>
+          <svg class="card-border-svg" preserveAspectRatio="none"></svg>
+        </div>
+
+        <div class="project-card project-card--empty reveal reveal-delay-5">
+          <div class="card-inner">
+            <div class="card-pattern"></div>
+            <div class="empty-slot">
+              <div class="empty-slot-icon">+</div>
+              <span class="empty-slot-text">Prochain projet</span>
+            </div>
+          </div>
+          <svg class="card-border-svg" preserveAspectRatio="none"></svg>
+        </div>
+
+      </div>
+
+      <footer class="footer reveal">
+        <span>© 2026 Arthur Jeunechamp</span>
+        <a href="https://arthurjeunechamp.com">arthurjeunechamp.com</a>
+      </footer>
+
+    </div>
+  </div>
+
+  <script>
+    // ── Draw SVG borders that perfectly follow the clip-path shape ──
+    function drawCardBorders() {
+      const cut = 32;
+      document.querySelectorAll('.project-card').forEach(card => {
+        const svg = card.querySelector('.card-border-svg');
+        const inner = card.querySelector('.card-inner');
+        if (!svg || !inner) return;
+
+        const w = inner.offsetWidth;
+        const h = inner.offsetHeight;
+
+        svg.setAttribute('width', w);
+        svg.setAttribute('height', h);
+        svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
+
+        svg.innerHTML = '';
+
+        const points = [
+          `0.5,0.5`,
+          `${w - cut},0.5`,
+          `${w - 0.5},${cut}`,
+          `${w - 0.5},${h - 0.5}`,
+          `${cut},${h - 0.5}`,
+          `0.5,${h - cut}`,
+          `0.5,0.5`
+        ].join(' ');
+
+        const polyline = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
+        polyline.setAttribute('points', points);
+        svg.appendChild(polyline);
+      });
+    }
+
+    drawCardBorders();
+    window.addEventListener('resize', drawCardBorders);
+
+    // ── Parallax on header decorative shapes at 50% scroll speed ──
+    const header = document.querySelector('.header');
+
+    function updateParallax() {
+      const scrollY = window.scrollY;
+      const headerBottom = header.offsetTop + header.offsetHeight;
+      if (scrollY < headerBottom) {
+        header.style.setProperty('--parallax-circles', (scrollY * 0.4) + 'px');
+        header.style.setProperty('--parallax-squares', (scrollY * 0.6) + 'px');
+      }
+    }
+
+    window.addEventListener('scroll', updateParallax, { passive: true });
+
+    // ── Scroll reveal via IntersectionObserver ──
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('revealed');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, {
+      threshold: 0.1,
+      rootMargin: '0px 0px -40px 0px'
+    });
+
+    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+  </script>
+
+</body>
+</html>
