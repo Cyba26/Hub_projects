@@ -1,8 +1,14 @@
 {
-  "rewrites": [
+  "redirects": [
+    {
+      "source": "/pico8",
+      "destination": "https://pico8-online.vercel.app",
+      "permanent": false
+    },
     {
       "source": "/pico8/:path*",
-      "destination": "https://pico8-online.vercel.app/:path*"
+      "destination": "https://pico8-online.vercel.app/:path*",
+      "permanent": false
     }
   ]
 }
